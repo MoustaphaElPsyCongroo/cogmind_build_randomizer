@@ -1,11 +1,12 @@
 # Cogmind Build/Route randomizer
-## Example route
-![Example build/route](./example.png)
 
 This small python script chooses a build archetype and a route for you at random and prints it as a mission order.
 - Randomizes your propulsion type.
 - Randomizes your alignment and/or some build-defining items and/or some special modes.
 - Randomizes your route, taking into account branches, alignment, exclusions.
+
+## Example route
+![Example build/route](./example.png)
 
 ## How to use
 - [Install python3](https://www.python.org/downloads/)
