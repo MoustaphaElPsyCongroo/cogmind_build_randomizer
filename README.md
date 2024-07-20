@@ -1,4 +1,5 @@
 # Cogmind Build/Route randomizer
+## Example route
 ![Example build/route](./example.png)
 
 This small python script chooses a build archetype and a route for you at random and prints it as a mission order.
@@ -20,4 +21,5 @@ Supports up to Beta 13. Keep in mind I'm still unspoiled about many parts of
 the game, especially endgame so let me know if a build archetype or route would
 seem relevant to add.
 
+## A bit more complex build/route
 ![More complex build/route](./more_complex_route.png)
