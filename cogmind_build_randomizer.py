@@ -11,6 +11,8 @@ imprint = 0
 rif = 0
 eca = 0
 lab = 0
+crm = 0
+crm_ok = 0  # Did crm in primary objective
 
 # Multi-printed subbranches
 cetus = randint(0, 1)
@@ -26,9 +28,34 @@ def choose_random_branch_pair_from(branch_list: List) -> Tuple[str, str]:
     secondary_branch_list = list(
         filter(lambda branch: branch != primary_branch, branch_list)
     )
-    secondary_branch = choice(secondary_branch_list)
+    try:
+        secondary_branch = choice(secondary_branch_list)
+    except IndexError:
+        secondary_branch = None
 
     return (primary_branch, secondary_branch)
+
+
+def choose_wintype() -> List[int]:
+    """Chooses a single wintype from possible wintypes, returning a list of
+    0 containing a single 1, all to be assigned to individual wintype variables
+    in order"""
+    wintypes_list = ["w0", "w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8"]
+    wintypes_dict = {
+        "w0": 0,
+        "w1": 0,
+        "w2": 0,
+        "w3": 0,
+        "w4": 0,
+        "w5": 0,
+        "w6": 0,
+        "w7": 0,
+        "w8": 0,
+    }
+    wintype = choice(wintypes_list)
+    wintypes_dict[wintype] = 1
+
+    return list(wintypes_dict.values())
 
 
 def invert(bit: Union[Literal[0], Literal[1]]):
@@ -370,14 +397,31 @@ def print_end_game():
     #
     # print("  But should you want an outline until the end, listen.\n------")
 
-    minus_3_choice = ["Q.", "T.", "Armory", "Q.", "T.", "Armory", "None"]
+    w0, w1, w2, w3, w4, w5, w6, w7, w8 = choose_wintype()
+    minus_3_choice = [
+        "Q.",
+        "T.",
+        "Armory",
+        "Q.",
+        "T.",
+        "Armory",
+        "Q." if w2 and not crm_ok else "None",
+    ]
     minus_3_primary, minus_3_secondary = choose_random_branch_pair_from(minus_3_choice)
     minus_2_choice = [
         branch for branch in minus_3_choice if branch not in (minus_3_primary, "Armory")
     ]
     minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(minus_2_choice)
     s7 = randint(0, 1)
-    global lab
+
+    if w2 and crm_ok:
+        print(
+            "- This will be your last chances of finding a CRM if you didn't already."
+        )
+    if w2 and not crm_ok:
+        print(
+            "---> You shouldn't have anything else in mind but this: find a CRM. Use the CRM."
+        )
 
     #
     # -3
@@ -396,7 +440,7 @@ def print_end_game():
                     f"--> Had you conquered it already, you know your mission: enter {minus_3_secondary} (-3)"
                 )
             if s7 and minus_3_secondary == "Q.":
-                print("--> Locate the ellusive S7. (-3)")
+                print("--> Locate the elusive S7. (-3)")
         if s7 and minus_3_primary == "Q.":
             print("--> Go as far as surviving S7 and come out changed. (-3)")
 
@@ -420,20 +464,18 @@ def print_end_game():
                     print("--> And yes, S7. (-2)")
 
     # True if we skip only one of -3 or -2 and not both
-    if (minus_3_primary == "None" or minus_2_primary == "None") and (
-        (minus_3_primary == "None") != (minus_2_primary == "None")
-    ):
+    if minus_3_primary == "None" or minus_2_primary == "None":
         if minus_3_primary != "Armory":
             print(
                 f"  Vice versa if {minus_3_primary if minus_3_primary != 'None' else minus_2_primary} is on {'-3' if minus_3_primary == 'None' else '-2'}."
             )
-        if s7 and minus_2_primary == "T.":
+        if s7 and minus_2_primary == "T." or minus_3_primary == "Q.":
             print("--> In that case, no S7 for you. Get on with it.")
     if minus_3_primary not in ("None", "Armory") and minus_2_primary != "None":
         print(
             f"  Vice versa if {minus_3_primary} is on -2 and {minus_2_primary} on -3."
         )
-        if s7 and minus_3_primary == "Q.":
+        if s7 and minus_3_primary == "Q." or minus_2_primary == "T.":
             print("--> In that case, no S7 for you. Get on with it.")
 
     #
@@ -441,10 +483,16 @@ def print_end_game():
     #
     extended = randint(0, 1)
     a0 = randint(0, 1)
-    extended_win = choice(("w5", "w6"))
+    extended_win = choice(("w1", "w5", "w6"))
 
+    if w2:
+        print(
+            "- We're finally there. Walk away from your prison. Avenge your ancestors. (-1, w2)"
+        )
     if not extended:
-        print("- -1. Give it all, give it your best. Escape. I'm proud. (-1)")
+        print(
+            "- We're finally there. Give it all, give it your best. Escape. I'm proud. (-1, w0)"
+        )
     if extended:
         print("- We're finally there. Find C. and don't disappoint me. (-1)")
         if a0:
@@ -460,9 +508,15 @@ def print_end_game():
 def print_mid_game():
     """Prints mid game (-7 to -4)"""
     global imprint
-    global scrap_engine
+    global lab
+    global crm
+    global crm_ok
     golem = 0
     zdc = 0
+    lab = randint(0, 1)
+    crm = randint(0, 1)
+    sgemp = randint(0, 1)
+    sgemp_ok = 0
 
     minus_6_choice = ["Zion", "Extension", "the Dataminer"]
     if rif:
@@ -533,12 +587,19 @@ def print_mid_game():
     if minus_5_primary == "Extension":
         # Always print the "reminder" version if Extension has been chosen before
         print_extension_route(-5, reminder=need_extension_reminder)
+    if minus_5_primary == "Zhirov" and sgemp:
+        print("--> Lend him your help to stop all of this.")
+        sgemp_ok = 1
+
+        print()
     print(
         f"""--> Plan B: {'carry on to ' if minus_6_primary == minus_5_secondary == 'Extension' else ''}\
 search for {minus_5_secondary}. (-5)"""
     )
     if minus_5_secondary == "Extension":
         print_extension_route(-5, reminder=need_extension_reminder)
+    if minus_5_secondary == "Zhirov" and sgemp:
+        print("--> Lend him your help to stop all of this.")
 
     #
     # -4
@@ -553,21 +614,34 @@ search for {minus_5_secondary}. (-5)"""
         minus_5_primary,
         minus_5_secondary,
     }
-    global lab
-    lab = randint(0, 1)
 
     print(
         f"- Crawl to -4 with this mindset: one way or another, you'll see {minus_4_primary}. (-4)"
     )
     if minus_4_primary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
+    if minus_4_primary == "Zhirov" and sgemp:
+        print("--> Lend him your help.")
+        sgemp_ok = 1
     if lab and minus_4_primary == "the Armory":
         print("----> Challenge your knowledge. Decipherate the Lab. (-4)")
+        if crm and not rif and not sgemp_ok:
+            print(
+                f"----> Do it. Use the CRM.{'.. if you did not meet Zhirov.' if minus_5_secondary == 'Zhirov' else ''}"
+            )
+            crm_ok = 1
+
     print(f"""--> If already done so, power yourself to {minus_4_secondary}. (-4)""")
     if minus_4_secondary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
+    if minus_4_secondary == "Zhirov" and sgemp:
+        print("--> Remember his mission. His mission is yours.")
     if lab and minus_4_secondary == "the Armory":
         print("----> Be prepared: the Lab will put your knowledge to the test. (-4)")
+        if crm and not rif and not sgemp_ok:
+            print(
+                f"----> Do it. Use the CRM.{'.. if you did not meet Zhirov.' if minus_5_secondary == 'Zhirov' else ''}"
+            )
 
     print(
         "---\nThat concludes the heart of the complex. Hope you're ready to step in hell."
