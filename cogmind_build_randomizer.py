@@ -377,6 +377,7 @@ def print_end_game():
     ]
     minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(minus_2_choice)
     s7 = randint(0, 1)
+    global lab
 
     #
     # -3
@@ -386,6 +387,8 @@ def print_end_game():
     else:
         print(f"- Try everything you can to break into {minus_3_primary} on -3. (-3)")
         if minus_3_primary == "Armory":
+            if lab:
+                print("--> Have intel. Be prepared for the Lab. (-3)")
             if minus_3_secondary == "None":
                 print("--> Had you conquered it already, it's enough. Leave -3. (-3)")
             else:
@@ -416,11 +419,15 @@ def print_end_game():
                 if s7 and minus_2_secondary != "Q.":
                     print("--> And yes, S7. (-2)")
 
-    if minus_3_primary == "None" or minus_2_primary == "None":
-        print(
-            f"  Vice versa if {minus_3_primary if minus_3_primary not in ('None', 'Armory') else minus_2_primary} is on {'-3' if minus_3_primary == 'None' else '-2'}."
-        )
-        if s7 and minus_3_primary == "Q.":
+    # True if we skip only one of -3 or -2 and not both
+    if (minus_3_primary == "None" or minus_2_primary == "None") and (
+        (minus_3_primary == "None") != (minus_2_primary == "None")
+    ):
+        if minus_3_primary != "Armory":
+            print(
+                f"  Vice versa if {minus_3_primary if minus_3_primary != 'None' else minus_2_primary} is on {'-3' if minus_3_primary == 'None' else '-2'}."
+            )
+        if s7 and minus_2_primary == "T.":
             print("--> In that case, no S7 for you. Get on with it.")
     if minus_3_primary not in ("None", "Armory") and minus_2_primary != "None":
         print(
