@@ -10,6 +10,7 @@ scrap_engine = 0
 imprint = 0
 rif = 0
 eca = 0
+lab = 0
 
 # Multi-printed subbranches
 cetus = randint(0, 1)
@@ -367,44 +368,78 @@ def print_end_game():
     #
     # END GAME (-3 to end)
     #
-    print("  But should you want an outline until the end, listen.\n------")
+    # print("  But should you want an outline until the end, listen.\n------")
 
-    minus_3_choice = ["Q.", "T.", "Q.", "T.", "None"]
-    minus_3_q_or_t = choice(minus_3_choice)
-    minus_2_q_or_t = choice(
-        [branch for branch in minus_3_choice if branch != minus_3_q_or_t]
-    )
+    minus_3_choice = ["Q.", "T.", "Armory", "Q.", "T.", "Armory", "None"]
+    minus_3_primary, minus_3_secondary = choose_random_branch_pair_from(minus_3_choice)
+    minus_2_choice = [
+        branch for branch in minus_3_choice if branch not in (minus_3_primary, "Armory")
+    ]
+    minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(minus_2_choice)
     s7 = randint(0, 1)
 
-    if minus_3_q_or_t == "None":
+    #
+    # -3
+    #
+    if minus_3_primary == "None":
         print("- Run to -2. Don't stray. (-3)")
     else:
-        print(f"- Try everything you can to break into {minus_3_q_or_t} on -3. (-3)")
-        if s7 and minus_3_q_or_t == "Q.":
+        print(f"- Try everything you can to break into {minus_3_primary} on -3. (-3)")
+        if minus_3_primary == "Armory":
+            if minus_3_secondary == "None":
+                print("--> Had you conquered it already, it's enough. Leave -3. (-3)")
+            else:
+                print(
+                    f"--> Had you conquered it already, you know your mission: enter {minus_3_secondary} (-3)"
+                )
+            if s7 and minus_3_secondary == "Q.":
+                print("--> Locate the ellusive S7. (-3)")
+        if s7 and minus_3_primary == "Q.":
             print("--> Go as far as surviving S7 and come out changed. (-3)")
 
-    if minus_2_q_or_t == "None":
+    #
+    # -2
+    #
+    if minus_2_primary == "None":
         print("- Leave -2 as fast as possible. Your past is behind you. (-2)")
     else:
-        print(f"- On -2, stand firm and carry on. Sneak inside {minus_2_q_or_t} (-2)")
-        if s7 and minus_3_q_or_t != "Q.":
-            print("--> Go as far as surviving S7 and come out changed. (-2)")
+        print(f"- On -2, stand firm and carry on. Sneak inside {minus_2_primary} (-2)")
+        if s7 and minus_2_primary != "Q.":
+            print("--> Survive S7. Come out changed. (-2)")
+        if minus_3_primary == "Armory" and minus_2_primary == minus_3_secondary:
+            if minus_2_secondary == "None":
+                print(
+                    "--> If you did complete this objective scram from -2, and fast. (-2)"
+                )
+            else:
+                print(f"--> Alternate plan: {minus_2_secondary}")
+                if s7 and minus_2_secondary != "Q.":
+                    print("--> And yes, S7. (-2)")
 
-    if minus_3_q_or_t == "None" or minus_2_q_or_t == "None":
+    if minus_3_primary == "None" or minus_2_primary == "None":
         print(
-            f"  Vice versa if {minus_3_q_or_t if minus_3_q_or_t != 'None' else minus_2_q_or_t} is on {'-3' if minus_3_q_or_t == 'None' else '-2'}."
+            f"  Vice versa if {minus_3_primary if minus_3_primary not in ('None', 'Armory') else minus_2_primary} is on {'-3' if minus_3_primary == 'None' else '-2'}."
         )
-    if minus_3_q_or_t != "None" and minus_2_q_or_t != "None":
-        print(f"  Vice versa if {minus_3_q_or_t} is on -2 and {minus_2_q_or_t} on -3.")
+        if s7 and minus_3_primary == "Q.":
+            print("--> In that case, no S7 for you. Get on with it.")
+    if minus_3_primary not in ("None", "Armory") and minus_2_primary != "None":
+        print(
+            f"  Vice versa if {minus_3_primary} is on -2 and {minus_2_primary} on -3."
+        )
+        if s7 and minus_3_primary == "Q.":
+            print("--> In that case, no S7 for you. Get on with it.")
 
+    #
+    # -1
+    #
     extended = randint(0, 1)
     a0 = randint(0, 1)
     extended_win = choice(("w5", "w6"))
 
     if not extended:
-        print("- Leave -1 as soon as possible. Not bad. (-1)")
+        print("- -1. Give it all, give it your best. Escape. I'm proud. (-1)")
     if extended:
-        print("- C. will await you. Don't disappoint me. (-1)")
+        print("- We're finally there. Find C. and don't disappoint me. (-1)")
         if a0:
             print("--> Show me that you have what it takes to reach A0. (-1)")
             if extended_win == "w5":
@@ -464,7 +499,7 @@ def print_mid_game():
         )
 
     print(
-        f"""--> You have a plan B should {minus_6_primary} not be on -6:\
+        f"""--> Your plan B should {minus_6_primary} not be on -6 is clear:\
  seek {minus_6_secondary}. (-6)"""
     )
     if minus_6_secondary == "Zion":
@@ -511,10 +546,11 @@ search for {minus_5_secondary}. (-5)"""
         minus_5_primary,
         minus_5_secondary,
     }
+    global lab
     lab = randint(0, 1)
 
     print(
-        f"\n- Crawl to -4 with this mindset: one way or another, you'll see {minus_4_primary}. (-4)"
+        f"- Crawl to -4 with this mindset: one way or another, you'll see {minus_4_primary}. (-4)"
     )
     if minus_4_primary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
@@ -527,9 +563,10 @@ search for {minus_5_secondary}. (-5)"""
         print("----> Be prepared: the Lab will put your knowledge to the test. (-4)")
 
     print(
-        "---\n- That concludes the heart of the complex. Hope you're ready to step in hell."
+        "---\nThat concludes the heart of the complex. Hope you're ready to step in hell."
     )
-    print("  From this point you are free. Carefully choose your destiny.\n")
+    print("------")
+    # print("  From this point you are free. Carefully choose your destiny.\n")
 
 
 if __name__ == "__main__":
