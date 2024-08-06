@@ -146,6 +146,8 @@ def print_special_cogmind_or_mode():
         w4_rif = randint(0, 1)
         if w4_rif:
             mode = "garrison"
+    if w7:
+        imprint = 0
     if mode == "garrison":
         if w4_rif:
             rif = 1
@@ -163,7 +165,7 @@ def print_special_cogmind_or_mode():
             eca = randint(0, 1)
             rif = invert(eca)
 
-        if eca or w7:
+        if eca:
             imprint = 0
         if rif and imprint:
             imprint = randint(0, 1)
@@ -769,7 +771,7 @@ search for {minus_5_secondary}. (-5)"""
             print("----> Do it. Use the CRM.")
 
     print(
-        "---\nThat concludes the heart of the complex. Hope you're ready to step in hell."
+        "---\nThat concludes the heart of the complex. Hope you're ready to step in hell.\n"
     )
     # print("  From this point you are free. Carefully choose your destiny.\n")
 
