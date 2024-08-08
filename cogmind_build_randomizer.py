@@ -306,11 +306,12 @@ def print_special_cogmind_or_mode():
 
 def print_propulsion_build():
     """Prints propulsion type of cogmind's build at random."""
-    propulsion_build = randint(0, 4)
+    propulsion_build = randint(0, 6)
     treads = 0 <= propulsion_build <= 1  # I like shooting things :)
     flight = propulsion_build == 2
     wheels = propulsion_build == 3
     hover = propulsion_build == 4
+    legs = 5 <= propulsion_build <= 6  # melee is fun :)
 
     if treads:
         print("* You are a tank on Treads, ripe for heavy combat.\n")
@@ -320,6 +321,8 @@ def print_propulsion_build():
         print("* You are here to carry the world on Wheels, and do it fast.\n")
     if hover:
         print("* You are Hovering around your enemies, ready to corrupt and kite.\n")
+    if legs:
+        print("* You are a samurai on Legs, charging through opposition in melee.\n")
 
 
 def print_early_game():
