@@ -456,7 +456,7 @@ def print_early_game():
     if storage and not minus_7_storage:
         print(
             "- If you fail finding the Storage before the Factory, drop it.\n  \
-Let fate decide between a -7 Dataminer or a -7 Zion and ",
+Let fate decide between a -7 Dataminer or a -7 Zion and",
             minus_7_action,
         )
     if not storage:
