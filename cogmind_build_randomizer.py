@@ -72,9 +72,16 @@ def choose_random_final_mission_from(
     minus_3_primary = mandatory_branch
     minus_3_secondary = choice(["None", "Armory"])
     minus_2_choice = ["T." if mandatory_branch == "Q." else "Q.", "None"]
-    minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(minus_2_choice)
+    minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(
+        minus_2_choice
+    )
 
-    return minus_3_primary, minus_3_secondary, minus_2_primary, minus_2_secondary
+    return (
+        minus_3_primary,
+        minus_3_secondary,
+        minus_2_primary,
+        minus_2_secondary,
+    )
 
 
 def invert(bit: Union[Literal[0], Literal[1]]):
@@ -85,12 +92,12 @@ def invert(bit: Union[Literal[0], Literal[1]]):
 def print_extension_route(floor: int, reminder: bool = False):
     """Prints how deep to go through Extension branches"""
     if cetus and not reminder:
-        print(f"""--> From there press into the Cetus.\
-{" Don't forget to bring A7 to the mainframe." if w7 else ''} ({floor})""")
+        print(f"""--> Press into the Cetus.\
+{" Don't forget to bring A7 to the mainframe." if w7 else ""} ({floor})""")
         if archives:
             print(
                 f"""---- Regroup and use the Archives to - hopefully - make a stay.\
-{" Keep A7 alive and well." if w7 else ''} ({floor})"""
+{" Keep A7 alive and well." if w7 else ""} ({floor})"""
             )
 
             if hub:
@@ -100,8 +107,8 @@ def print_extension_route(floor: int, reminder: bool = False):
     if cetus and reminder:
         print(
             f"""--> Remember: Cetus. \
-{'And ' if archives and not hub else ''}{'Archives.' if archives else ''}\
-{' And Hub.' if archives and hub else ''}"""
+{"And " if archives and not hub else ""}{"Archives." if archives else ""}\
+{" Then Hub." if archives and hub else ""}"""
         )
 
 
@@ -297,9 +304,15 @@ def print_special_cogmind_or_mode():
   Should you fail all or part of this mission, engrave the plan B below in your mind."""
         )
         if w7:
-            print("*******************************************************************")
-            print("** But don't forget: you HAVE TO MEET WARLORD. This is an order. **")
-            print("*******************************************************************")
+            print(
+                "*******************************************************************"
+            )
+            print(
+                "** But don't forget: you HAVE TO MEET WARLORD. This is an order. **"
+            )
+            print(
+                "*******************************************************************"
+            )
     if mode != "vanilla":
         print("------")
 
@@ -320,9 +333,13 @@ def print_propulsion_build():
     if wheels:
         print("* You are here to carry the world on Wheels, and do it fast.\n")
     if hover:
-        print("* You are Hovering around your enemies, ready to corrupt and kite.\n")
+        print(
+            "* You are Hovering around your enemies, ready to corrupt and kite.\n"
+        )
     if legs:
-        print("* You are a samurai on Legs, charging through opposition in melee.\n")
+        print(
+            "* You are a samurai on Legs, charging through opposition in melee.\n"
+        )
 
 
 def print_early_game():
@@ -335,7 +352,9 @@ def print_early_game():
         "storage": randint(0, 1),
         "subcaves": randint(0, 1),
     }
-    exiles, storage, subcaves = itemgetter("exiles", "storage", "subcaves")(early_game)
+    exiles, storage, subcaves = itemgetter("exiles", "storage", "subcaves")(
+        early_game
+    )
     minus_7_storage = randint(0, 1)
     # recycling can be chosen only if storage or subcaves = 1, else <= 0.
     recycling = max(0, randint(0, 1) + storage - 1) or max(
@@ -349,9 +368,9 @@ def print_early_game():
         prioritary = choice(("exiles", "storage", "subcaves"))
         early_game[prioritary] = 1
 
-        exiles, storage, subcaves = itemgetter("exiles", "storage", "subcaves")(
-            early_game
-        )
+        exiles, storage, subcaves = itemgetter(
+            "exiles", "storage", "subcaves"
+        )(early_game)
 
     #
     # -10
@@ -397,20 +416,22 @@ def print_early_game():
             print("- Meet the Exiles, but only on -9. (-9)")
             if imprint:
                 print("--> Don't farcom.")
-            print("--> That'll maximize your chances to infiltrate the Storage. (-8)")
+            print(
+                "--> That'll maximize your chances to also infiltrate the Storage. (-8)"
+            )
 
     #
     # -9
     #
     if storage and not exiles and not subcaves:
-        print("- Top priority: break through the Storage. (-9 or -8)")
+        print("- Top priority: break through Storage. (-9 or -8)")
     if storage and minus_7_storage:
         print(
-            " Locate it even if it takes infiltrating the -7 Garrison. Bad luck. You'll get used to it. (-7)"
+            "  Locate it even if it takes infiltrating the -7 Garrison. Bad luck. You'll get used to it. (-7)"
         )
     if storage and recycling:
         print(
-            "--> Don't stop on your tracks. Venture into the depths of Recycling. (-9 or -8 or -7)"
+            "--> Don't stop on your tracks, venture into the depths of Recycling. (-9 or -8 or -7)"
         )
     if scrap_engine:
         print(
@@ -421,25 +442,28 @@ def print_early_game():
     # -7
     #
     minus_7_action = (
-        "Follow it. (-7)"
+        "follow it. (-7)"
         if not rif
-        else "\n  Advice: stay away from any Zion exit. You have the RIF."
+        else "\n  Advice though: stay away from any Zion exit. You have the RIF."
     )
 
     if storage and minus_7_storage:
         print(
-            """- Only would you happen to locate Storage earlier,\
- let fate decide for a -7 Dataminer or a -7 Zion.""",
+            """- If you locate Storage earlier,\
+ let fate decide for a -7 Dataminer or a -7 Zion and """,
             minus_7_action,
         )
     if storage and not minus_7_storage:
         print(
-            "- If you fail finding the Storage by -7, drop it.\n  \
-Let fate decide between a -7 Dataminer or a -7 Zion.",
+            "- If you fail finding the Storage before the Factory, drop it.\n  \
+Let fate decide between a -7 Dataminer or a -7 Zion and ",
             minus_7_action,
         )
     if not storage:
-        print("- Fate will decide between a -7 Dataminer or a -7 Zion.", minus_7_action)
+        print(
+            "- Only fate will decide between a -7 Dataminer or a -7 Zion,",
+            minus_7_action,
+        )
 
 
 def print_end_game():
@@ -458,21 +482,36 @@ def print_end_game():
         "Armory" if not w3 else "Q.",
         "Q." if ((w2 and not crm_ok) or w3) else "None",
     ]
-    minus_3_primary, minus_3_secondary = choose_random_branch_pair_from(minus_3_choice)
+    minus_3_primary, minus_3_secondary = choose_random_branch_pair_from(
+        minus_3_choice
+    )
     minus_2_choice = [
-        branch for branch in minus_3_choice if branch not in (minus_3_primary, "Armory")
+        branch
+        for branch in minus_3_choice
+        if branch not in (minus_3_primary, "Armory")
     ]
-    minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(minus_2_choice)
+    minus_2_primary, minus_2_secondary = choose_random_branch_pair_from(
+        minus_2_choice
+    )
 
     if sgemp_quest and "T." not in (minus_3_primary, minus_2_primary):
-        minus_3_primary, minus_3_secondary, minus_2_primary, minus_2_secondary = (
-            choose_random_final_mission_from("T.")
-        )
+        (
+            minus_3_primary,
+            minus_3_secondary,
+            minus_2_primary,
+            minus_2_secondary,
+        ) = choose_random_final_mission_from("T.")
 
-    if ((w2 and not crm_ok) or w3) and "Q." not in (minus_3_primary, minus_2_primary):
-        minus_3_primary, minus_3_secondary, minus_2_primary, minus_2_secondary = (
-            choose_random_final_mission_from("Q.")
-        )
+    if ((w2 and not crm_ok) or w3) and "Q." not in (
+        minus_3_primary,
+        minus_2_primary,
+    ):
+        (
+            minus_3_primary,
+            minus_3_secondary,
+            minus_2_primary,
+            minus_2_secondary,
+        ) = choose_random_final_mission_from("Q.")
 
     if w3:
         s7 = randint(0, 2)  # more chance to free the pod for w3
@@ -480,31 +519,41 @@ def print_end_game():
         s7 = randint(0, 1)
 
     if w2 and crm_ok:
-        print("This will be your last chances of finding a CRM if you didn't already.")
+        print(
+            "This will be your last chances of finding a CRM if you didn't already."
+        )
     if w2 and not crm_ok:
         print(
             "This is the only objective you should have in mind: find a CRM. Use a CRM."
         )
     if w3:
         print("Don't miss Q. You must secure the pod.")
-    if w8 and minus_3_primary not in ("None", "Armory") and minus_2_primary != "None":
-        print("Do everything it takes to never take a CRM.")
+    if (
+        w8
+        and minus_3_primary not in ("None", "Armory")
+        and minus_2_primary != "None"
+    ):
+        print("Do everything it takes to NEVER take a CRM.")
 
     #
     # -3
     #
     if minus_3_primary == "None":
-        print("- Run to -2. Don't stray. (-3)")
+        print("- Run to -2 without deviation. (-3)")
     else:
-        print(f"- Try everything you can to break into {minus_3_primary} on -3. (-3)")
+        print(
+            f"- Try everything you can to break into {minus_3_primary} on -3. (-3)"
+        )
         if minus_3_primary == "Armory":
             if lab:
-                print("--> Have intel. Be prepared for the Lab. (-3)")
+                print("--> Prepare your intellect and intel for the Lab. (-3)")
             if minus_3_secondary == "None":
-                print("--> Had you conquered it already, it's enough. Leave -3. (-3)")
+                print(
+                    "--> Had you conquered it already, it's enough. Leave -3. (-3)"
+                )
             else:
                 print(
-                    f"--> Had you conquered it already, you know your mission: enter {minus_3_secondary} (-3)"
+                    f"--> Had you conquered it already, it's not enough. Enter {minus_3_secondary} (-3)"
                 )
             if sgemp_quest and minus_3_secondary == "T.":
                 print("--> Steal the SGEMP Prototype. (-3)")
@@ -514,38 +563,47 @@ def print_end_game():
             print("--> Go as far as surviving S7 and come out changed. (-3)")
             if w3:
                 print(
-                    "--> Seize the opportunity to unlock the loadout. And slash away. (-3)"
+                    "--> Seize the opportunity to unlock the loadout, and slash away. (-3)"
                 )
         if sgemp_quest and minus_3_primary == "T.":
-            print("--> Zhirov's wishes are everyone's: steal the SGEMP Prototype. (-3)")
+            print(
+                "--> Zhirov's wishes are everyone's: steal the SGEMP Prototype. (-3)"
+            )
     #
     # -2
     #
     if minus_2_primary == "None":
         print("- Leave -2 as fast as possible. Your past is behind you. (-2)")
     else:
-        print(f"- On -2, stand firm and carry on. Sneak inside {minus_2_primary} (-2)")
+        print(
+            f"- On -2, stand firm, carry on, sneak inside {minus_2_primary} (-2)"
+        )
         if s7 and minus_2_primary != "Q.":
-            print("--> Survive S7. Come out changed. (-2)")
+            print("--> Survive S7 and come out changed. (-2)")
             if w3:
                 print(
-                    "--> Seize the opportunity to unlock the loadout. And slash away. (-2)"
+                    "--> Seize the opportunity to unlock the loadout, and slash away. (-2)"
                 )
         if sgemp_quest and minus_2_primary == "T.":
-            print("--> Zhirov's wishes are everyone's: steal the SGEMP Prototype. (-2)")
-        if minus_3_primary == "Armory" and minus_2_primary == minus_3_secondary:
+            print(
+                "--> Zhirov's wishes are everyone's: steal the SGEMP Prototype. (-2)"
+            )
+        if (
+            minus_3_primary == "Armory"
+            and minus_2_primary == minus_3_secondary
+        ):
             if minus_2_secondary == "None":
                 print(
-                    "--> If you did complete this objective scram from -2, and fast. (-2)"
+                    "--> If you did overcome this, scram from -2. And fast. (-2)"
                 )
             else:
                 print(f"--> Alternate plan: {minus_2_secondary}")
                 if s7 and minus_2_secondary != "Q.":
                     print("--> And yes, S7. (-2)")
                     if w3:
-                        print("--> Unlock the loadout. And slash away. (-2)")
+                        print("--> Unlock the loadout, slash away. (-2)")
                 if sgemp_quest and minus_2_secondary == "T.":
-                    print("--> Don't forget: SGEMP Prototype. (-2)")
+                    print("--> Don't forget the SGEMP Prototype. (-2)")
 
     if minus_3_primary == "None" or minus_2_primary == "None":
         if minus_3_primary != "Armory":
@@ -568,11 +626,11 @@ def print_end_game():
     # Basic wins
     if w0:
         print(
-            "- We're finally there. Give it all, give it your best. Escape. I'm proud. (w0)"
+            "- You're so close. Give it all, give it your best. Escape. I'm proud. (w0)"
         )
     if w2:
         print(
-            "- We're finally there. Walk away from your prison. Avenge your ancestors. (w2)"
+            "- You're so close. Walk away from your prison. Avenge your ancestors. (w2)"
         )
     if w3:
         print(
@@ -581,11 +639,15 @@ def print_end_game():
 
     # Extended
     if w1 or w4 or w5 or w6 or w7 or w8:
-        print("- We're finally there. Find C. and don't disappoint me. (-1)")
+        print(
+            "- You're so close, yet so far. Find C. Don't disappoint me. (-1)"
+        )
 
         # Simple extended (+)
         if w1:
-            print("--> Overcome the previous domination and establish your own. (w1)")
+            print(
+                "--> You know your purpose: overthrow the previous dominion, establish your own. (w1)"
+            )
         if w4:
             if rif:
                 print(
@@ -609,9 +671,13 @@ def print_end_game():
         if w5 or w6:
             print("--> Show me that you have what it takes to reach A0. (-1)")
         if w5:
-            print("----> And enter the most important command of your life. (w5)")
+            print(
+                "----> And enter the most important command of your life. (w5)"
+            )
         if w6:
-            print("----> And take on the heat. Resist it. Take revenge. And exit. (w6)")
+            print(
+                "----> And take on the heat. Resist it. Take revenge. And exit. (w6)"
+            )
 
 
 def print_mid_game():
@@ -650,12 +716,18 @@ def print_mid_game():
         "Extension",
     ]
 
-    minus_6_primary, minus_6_secondary = choose_random_branch_pair_from(minus_6_choice)
+    minus_6_primary, minus_6_secondary = choose_random_branch_pair_from(
+        minus_6_choice
+    )
 
     if imprint:
-        print("--> If Zion is chosen, be the chosen one until the end: IMPRINT. (-7)")
+        print(
+            "--> If Zion is chosen, act yourself as the chosen one: IMPRINT. (-7)"
+        )
     if zdc:
-        print("----> Merely entering Zion won't suffice. Be a hero. Master ZDC. (-7)")
+        print(
+            "----> Merely entering Zion won't suffice. Be a hero. Master ZDC. (-7)"
+        )
     if golem:
         print("------> Secure the GOLEM. (-7)")
 
@@ -663,24 +735,26 @@ def print_mid_game():
     # -6
     #
     if minus_6_primary == "Zion":
-        print(
-            "- Your primary -6 objective, if not did already, is to reach the haven of Zion. (-6)"
-        )
+        print("- Zion, if uncharted, is your primary -6 objective. (-6)")
         if imprint or zdc or golem:
             print(
                 f"--> I'll say it again:{' IMPRINT.' if imprint else ''}{' ZDC.' if zdc else ''}{' To GOLEM.' if golem else ''} (-6)"
             )
 
     if minus_6_primary == "Extension":
-        print("- If you spot the gates of Extension on -6, break through there. (-6)")
+        print(
+            "- Break through the gates of Extension if you spot them on -6. (-6)"
+        )
         print_extension_route(-6)
 
     if minus_6_primary == "the Dataminer":
         print(
-            "- On -6, if haven't done so, focus all your mind into meeting the Dataminer. (-6)"
+            "- Focus all your mind on meeting the Dataminer if you still haven't had the (dis)pleasure. (-6)"
         )
 
-    print(f"""--> Plan B is clear: seek {minus_6_secondary}. (-6)""")
+    print(
+        f"""--> As a plan B turn your efforts to seeking {minus_6_secondary}. (-6)"""
+    )
     if minus_6_secondary == "Zion":
         if imprint or zdc or golem:
             print(
@@ -707,10 +781,13 @@ def print_mid_game():
         minus_5_primary, minus_5_secondary = choose_random_branch_pair_from(
             minus_5_choice
         )
-    need_extension_reminder = "Extension" in {minus_6_primary, minus_6_secondary}
+    need_extension_reminder = "Extension" in {
+        minus_6_primary,
+        minus_6_secondary,
+    }
 
     print(
-        f"""- Half way there. {minus_5_primary}{' still' if minus_5_primary == minus_6_primary == 'Extension' else ''} comes first\
+        f"""- Halfway through your periple, {minus_5_primary}{" still" if minus_5_primary == minus_6_primary == "Extension" else ""} comes first\
 . (-5)"""
     )
     if minus_5_primary == "Extension":
@@ -720,7 +797,7 @@ def print_mid_game():
         print("--> Lend him your help to stop all of this.")
         sgemp_quest = 1
     print(
-        f"""--> Plan B: {'carry on the ' if minus_6_primary == minus_5_secondary == 'Extension search' else ''}\
+        f"""--> Plan B: {"carry on the " if minus_6_primary == minus_5_secondary == "Extension search" else ""}\
 search for {minus_5_secondary}. (-5)"""
     )
     if minus_5_secondary == "Extension":
@@ -749,32 +826,34 @@ search for {minus_5_secondary}. (-5)"""
         minus_5_secondary,
     }
 
-    print(
-        f"- Crawl to -4 with this mindset: one way or another, you'll see {minus_4_primary}. (-4)"
-    )
+    print(f"- Now by any means necessary reach {minus_4_primary}. (-4)")
     if minus_4_primary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
     if minus_4_primary == "Zhirov" and sgemp:
-        print("--> Lend him your help.")
+        print("--> Lend him all your help.")
         sgemp_quest = 1
     if lab and minus_4_primary == "the Armory":
-        print("----> Challenge your knowledge. Decipherate the Lab. (-4)")
+        print("----> Challenge your knowledge to decipherate the Lab. (-4)")
         if crm and not sgemp_quest:
-            print("----> Do it. Use the CRM.")
+            print("----> Now do it. Use the CRM.")
             crm_ok = 1
 
-    print(f"""--> If already done so, power yourself to {minus_4_secondary}. (-4)""")
+    print(
+        f"""--> If you already did, power yourself to {minus_4_secondary}. (-4)"""
+    )
     if minus_4_secondary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
     if minus_4_secondary == "Zhirov" and sgemp:
         print("--> Remember his mission. His mission is yours.")
     if lab and minus_4_secondary == "the Armory":
-        print("----> Be prepared: the Lab will put your knowledge to the test. (-4)")
+        print(
+            "----> Stay sharp as the Lab will put your knowledge to the test. (-4)"
+        )
         if crm and not sgemp_quest:
-            print("----> Do it. Use the CRM.")
+            print("----> Now do it. Use the CRM.")
 
     print(
-        "---\nThat concludes the heart of the complex. Hope you're ready to step in hell.\n"
+        "---\nThat concludes the heart of the complex. Oil all cogs of your mind...\n ...for you are about to step in hell.\n"
     )
     # print("  From this point you are free. Carefully choose your destiny.\n")
 
