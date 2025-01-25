@@ -444,13 +444,13 @@ def print_early_game():
     minus_7_action = (
         "follow it. (-7)"
         if not rif
-        else "\n  Advice though: stay away from any Zion exit. You have the RIF."
+        else "follow it.\n  Advice though: stay away from any Zion exit. You have the RIF."
     )
 
     if storage and minus_7_storage:
         print(
             """- If you locate Storage earlier,\
- let fate decide for a -7 Dataminer or a -7 Zion and """,
+ let fate decide for a -7 Dataminer or a -7 Zion and""",
             minus_7_action,
         )
     if storage and not minus_7_storage:

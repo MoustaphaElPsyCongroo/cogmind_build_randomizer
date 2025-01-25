@@ -16,6 +16,3 @@ This small python script chooses a build archetype and a route for you at random
 
 Supports up to Beta 13. Let me know if a build archetype or route would
 seem relevant to add.
-
-## A bit more complex build/route
-![More complex build/route](./more_complex_route.png)
