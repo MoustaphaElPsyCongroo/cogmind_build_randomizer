@@ -11,8 +11,7 @@ This small python script chooses a build archetype and a route for you at random
 ## How to use
 - [Install python3](https://www.python.org/downloads/)
 - Click on Code -> Download zip, extract it in its own folder
-- Open a terminal in the folder. If you don't know how to on Windows, double click open_a_terminal_here.bat.
-- In the terminal, type `python3 cogmind_build_randomizer.py` and press enter
+- Double click on run.bat. Your mission order will be in the created cogmind_current_build.txt
 
 Supports up to Beta 13. Let me know if a build archetype or route would
 seem relevant to add.

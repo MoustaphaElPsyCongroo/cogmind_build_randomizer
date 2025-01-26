@@ -1,0 +1,1 @@
+python3 cogmind_build_randomizer.py > cogmind_current_build.txt
