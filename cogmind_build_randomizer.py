@@ -405,7 +405,7 @@ def print_early_game():
             )
     else:
         if not exiles:
-            print("Stay away from the Exiles.")
+            print("Stay away from the Exiles. (skip mines)")
         if not storage:
             print("Stay away from the Storage.")
         if exiles and not storage:
@@ -413,7 +413,7 @@ def print_early_game():
             if imprint:
                 print("--> But don't farcom.")
         if exiles and storage:
-            print("- Meet the Exiles, but only on -9. (-9)")
+            print("- Meet the Exiles, but only on -9. (-9, skip -10 mines)")
             if imprint:
                 print("--> Don't farcom.")
             print(
@@ -424,7 +424,7 @@ def print_early_game():
     # -9
     #
     if storage and not exiles and not subcaves:
-        print("- Top priority: break through Storage. (-9 or -8)")
+        print("- Top priority: break through Storage. (-9 or -8, skip -10 mines)")
     if storage and minus_7_storage:
         print(
             "  Locate it even if it takes infiltrating the -7 Garrison. Bad luck. You'll get used to it. (-7)"
