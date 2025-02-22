@@ -185,7 +185,7 @@ def print_special_cogmind_or_mode():
 
     if mode == "dsf":
         print(
-            "- Make a beeline to as many DSFs as you can (-7 to -2). Hint: chuting after a DSF lets you do DSFs semi consecutively."
+            "- Make a beeline to as many DSFs as you can (-7 to -3). Hint: chuting after a DSF lets you do DSFs semi consecutively."
         )
 
     if rif:
@@ -319,12 +319,12 @@ def print_special_cogmind_or_mode():
 
 def print_propulsion_build():
     """Prints propulsion type of cogmind's build at random."""
-    propulsion_build = randint(0, 6)
-    treads = 0 <= propulsion_build <= 1  # I like shooting things :)
-    flight = propulsion_build == 2
-    wheels = propulsion_build == 3
-    hover = propulsion_build == 4
-    legs = 5 <= propulsion_build <= 6  # melee is fun :)
+    propulsion_build = randint(0, 4)
+    treads = propulsion_build == 0
+    flight = propulsion_build == 1
+    wheels = propulsion_build == 2
+    hover = propulsion_build == 3
+    legs = propulsion_build == 4
 
     if treads:
         print("* You are a tank on Treads, ripe for heavy combat.\n")
@@ -417,14 +417,14 @@ def print_early_game():
             if imprint:
                 print("--> Don't farcom.")
             print(
-                "--> That'll maximize your chances to also infiltrate the Storage. (-8)"
+                "--> Maximize your chances, you must infiltrate the Storage too. (-8)"
             )
 
     #
     # -9
     #
     if storage and not exiles and not subcaves:
-        print("- Top priority: break through Storage. (-9 or -8, skip -10 mines)")
+        print("- Top priority: break through Storage. (-9 or -8)")
     if storage and minus_7_storage:
         print(
             "  Locate it even if it takes infiltrating the -7 Garrison. Bad luck. You'll get used to it. (-7)"
@@ -839,7 +839,7 @@ search for {minus_5_secondary}. (-5)"""
             crm_ok = 1
 
     print(
-        f"""--> If you already did, power yourself to {minus_4_secondary}. (-4)"""
+        f"""--> If you already did, finally power yourself to {minus_4_secondary}. (-4)"""
     )
     if minus_4_secondary == "Extension":
         print_extension_route(-4, reminder=need_extension_reminder)
